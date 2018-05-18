@@ -1,0 +1,2 @@
+﻿This package is a C#-port of the Minim library for audio analysis and beat detection in Java.
+The author of Minim is Damien di Fede (DDF), the original code can be found here (https://github.com/ddf/Minim/tree/master/src/main/java/ddf/minim/analysis)
