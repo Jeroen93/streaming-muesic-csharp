@@ -19,7 +19,6 @@ namespace Streaming_Muesic_WPF
         //Local copies of all the properties. (with default values)
         private string prompt = "Select a bridge from the list.";
         private string selectText = "Select";
-        private bool canRemoveItems = false;
         private ObservableCollection<BridgeItem> items;
         private BridgeItem selectedItem = null;
         
