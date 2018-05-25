@@ -17,6 +17,9 @@
             </Grid>
         </GroupBox>
         <Button Content="Button" HorizontalAlignment="Left" Margin="445,132,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <GroupBox Header="Philips Hue" HorizontalAlignment="Left" Height="399" Margin="590,10,0,0" VerticalAlignment="Top" Width="192">
+            <Grid HorizontalAlignment="Left" Height="379" Margin="10,10,-2,-12" VerticalAlignment="Top" Width="172"/>
+        </GroupBox>
 
     </Grid>
 </Window>
