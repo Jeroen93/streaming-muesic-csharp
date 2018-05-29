@@ -10,7 +10,7 @@ namespace Streaming_Muesic_WPF
         public BridgeItem(LocatedBridge bridge)
         {
             this.bridge = bridge;
-            this.displayName = bridge.BridgeId;
+            displayName = bridge.BridgeId;
         }
 
         public string DisplayName

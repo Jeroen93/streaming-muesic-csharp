@@ -16,7 +16,17 @@
                              " RenderTransformOrigin="0.5,0.5" Orientation="Vertical" Maximum="1" SmallChange="0.001"/>
             </Grid>
         </GroupBox>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="445,132,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <GroupBox Header="Philips Hue" HorizontalAlignment="Left" Height="399" Margin="558,10,0,0" VerticalAlignment="Top" Width="224">
+            <Grid HorizontalAlignment="Left" Height="379" Margin="10,10,-2,-12" VerticalAlignment="Top" Width="204">
+                <TextBox x:Name="tbIP" HorizontalAlignment="Left" Height="23" Margin="85,41,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="109"/>
+                <TextBox x:Name="tbKey" HorizontalAlignment="Left" Height="23" Margin="85,82,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="109"/>
+                <Label Content="IP Addr." HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="Key" Content="Label" HorizontalAlignment="Left" Margin="10,78,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.026,-2.74"/>
+                <Button x:Name="btnConnect" Content="Connect" HorizontalAlignment="Left" Margin="10,126,0,0" VerticalAlignment="Top" Width="75" Click="Btn_Connect_Click"/>
+                <Button x:Name="btnScan" Content="Search" HorizontalAlignment="Left" Margin="119,126,0,0" VerticalAlignment="Top" Width="75"/>
+                <ListBox x:Name="lbLights" HorizontalAlignment="Left" Height="208" Margin="10,161,0,0" VerticalAlignment="Top" Width="184"/>
+            </Grid>
+        </GroupBox>
 
     </Grid>
 </Window>
