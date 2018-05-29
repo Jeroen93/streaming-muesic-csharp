@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Threading;
 using NAudio.Wave;
+using Q42.HueApi;
 
 namespace Streaming_Muesic_WPF
 {
@@ -17,6 +19,7 @@ namespace Streaming_Muesic_WPF
         private float vuLeft, vuRight;
         private int sampleCount;
         private Action action;
+        private HuePlugin huePlugin;
 
         public MainWindow()
         {
@@ -34,7 +37,7 @@ namespace Streaming_Muesic_WPF
             capture = null;
             btnStart.IsEnabled = true;
         }
-        
+
         private void Capture_DataAvailable(object sender, WaveInEventArgs e)
         {
             for (int i = 0; i < e.BytesRecorded; i += 8)
@@ -51,9 +54,8 @@ namespace Streaming_Muesic_WPF
                     vuLeft = maxLeft;
                     vuRight = maxRight;
 
-                    Application.Current.Dispatcher.BeginInvoke(
-                        DispatcherPriority.Background, action);
-                    
+                    RunOnUIThread(action);
+
                     sampleCount = 0;
                     maxLeft = maxRight = 0;
                 }
@@ -70,15 +72,36 @@ namespace Streaming_Muesic_WPF
             btnStop.IsEnabled = true;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+
+        private void Btn_Connect_Click(object sender, RoutedEventArgs e)
         {
-            new HuePlugin();
+            huePlugin = new HuePlugin();
+            huePlugin.BridgeConnected += Hue_BridgeConnected;
+            huePlugin.Connect();
+        }
+
+        private void Hue_BridgeConnected(object sender, EventArgs e)
+        {
+            IEnumerable<Light> lights = huePlugin.Lights;
+
+            RunOnUIThread(new Action(() =>
+            {
+                foreach (var item in lights)
+                {
+                    lbLights.Items.Add(item.Name);
+                }
+            }));
         }
 
         private void Btn_Stop_Click(object sender, RoutedEventArgs e)
         {
             capture?.StopRecording();
             btnStop.IsEnabled = false;
+        }
+
+        private void RunOnUIThread(Action action)
+        {
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, action);
         }
     }
 }

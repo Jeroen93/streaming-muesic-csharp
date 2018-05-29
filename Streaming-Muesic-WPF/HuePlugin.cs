@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using Q42.HueApi;
 using Q42.HueApi.Interfaces;
 using Q42.HueApi.NET;
@@ -11,52 +13,73 @@ namespace Streaming_Muesic_WPF
 {
     class HuePlugin
     {
+        public String IpAddress { get; private set; }
+        public String Key { get; private set; }
+        public IEnumerable<Light> Lights { get; private set; }
+
+        public event EventHandler BridgeConnected;
+
         private Settings settings;
-        private LocalHueClient client;
+        private LocalHueClient client;        
 
         public HuePlugin()
         {
-            settings = Settings.Default;
+            settings = Settings.Default;            
+        }
+
+        public void Connect()
+        {
             var t = GetClient();
+            t.Wait();
+
+            if (ClientNotInitialized())
+            {
+                MessageBox.Show("Could not connect to a bridge with specified Ip Address and Key");
+                return;
+            }
+
+            t = GetLights();
             t.Wait();
         }
 
         private async Task GetClient()
         {
             //For more info, tips and tricks on using async methods: https://stackoverflow.com/a/10351400
-            var ip = await GetOrFindIP().ConfigureAwait(false);
+            IpAddress = await GetOrFindIP().ConfigureAwait(false);
 
-            if (String.IsNullOrEmpty(ip))
+            if (String.IsNullOrEmpty(IpAddress))
             {
                 return;
             }
 
-            client = new LocalHueClient(ip);
+            client = new LocalHueClient(IpAddress);
 
-            var key = await GetOrRegisterKey().ConfigureAwait(false);
+            Key = await GetOrRegisterKey().ConfigureAwait(false);
 
-            client.Initialize(key);
+            client.Initialize(Key);
 
-            if (!client.IsInitialized)
+            if (ClientNotInitialized())
             {
                 Console.WriteLine("Could not initialize client");
                 return;
             }
 
-            Console.WriteLine($"Client initialized on IP Address {ip} and with key {key}");            
+            Console.WriteLine($"Client initialized on IP Address {IpAddress} and with key {Key}");            
         }
 
         private async Task GetLights()
         {
-            if (client ==  null || !client.IsInitialized)
+            if (ClientNotInitialized())
                 throw new InvalidOperationException("Hue client is not initialized");
 
-            var lights = await client.GetLightsAsync().ConfigureAwait(false);
-            if (lights == null)
+            Lights = await client.GetLightsAsync().ConfigureAwait(false);
+            if (Lights == null)
             {
                 Console.WriteLine("Could not enumerate list. Hue may not be reachable.");
                 return;
             }
+
+            BridgeConnected?.Invoke(this, null); //Send list of lights in EventArgs?
         }
 
         private async Task<string> GetOrFindIP()
@@ -144,6 +167,11 @@ namespace Streaming_Muesic_WPF
 
             Console.WriteLine("Key: " + key);
             return key;
+        }
+
+        private bool ClientNotInitialized()
+        {
+            return client == null || !client.IsInitialized;
         }
     }
 }
