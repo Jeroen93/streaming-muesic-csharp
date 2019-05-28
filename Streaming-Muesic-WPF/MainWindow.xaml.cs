@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 using NAudio.Wave;
 using Q42.HueApi;
+using Q42.HueApi.Models.Bridge;
 
 namespace Streaming_Muesic_WPF
 {
@@ -97,6 +100,45 @@ namespace Streaming_Muesic_WPF
         {
             capture?.StopRecording();
             btnStop.IsEnabled = false;
+        }
+
+        private void BtnScan_Click(object sender, RoutedEventArgs e)
+        {
+            huePlugin = new HuePlugin();
+            huePlugin.BridgeConnected += Hue_BridgeConnected;
+            var bridges = huePlugin.ScanForBridges().ToArray();
+            string ip;
+
+            if (!bridges.Any())
+            {
+                Console.WriteLine("Scan did not find a Hue Bridge. Try suppling a IP address for the bridge");
+                return;
+            }
+
+            if (bridges.Length == 1)
+            {
+                ip = bridges[0].IpAddress;
+                Console.WriteLine("Bridge found using IP address: " + ip);
+            }
+            else
+            {
+                Console.WriteLine("Found more than one bridge");
+
+                var bridgeItems = new ObservableCollection<BridgeItem>(bridges.Select(b => new BridgeItem(b)));
+
+                var dialog = new ListDialogBox
+                {
+                    Items = bridgeItems
+                };
+                Console.WriteLine("showing dialog");
+                dialog.ShowDialog();
+
+                if (!dialog.IsCancelled)
+                {
+                    var item = dialog.SelectedItem as BridgeItem;
+                    ip = item.Bridge.IpAddress;
+                }
+            }
         }
 
         private void RunOnUIThread(Action action)

@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 using System.Windows;
 using Q42.HueApi;
 using Q42.HueApi.Interfaces;
-using Q42.HueApi.NET;
+using Q42.HueApi.Models.Bridge;
 using Streaming_Muesic_WPF.Properties;
 
 namespace Streaming_Muesic_WPF
 {
     class HuePlugin
     {
-        public String IpAddress { get; private set; }
-        public String Key { get; private set; }
+        public string IpAddress { get; private set; }
+        public string Key { get; private set; }
         public IEnumerable<Light> Lights { get; private set; }
 
         public event EventHandler BridgeConnected;
@@ -42,12 +42,17 @@ namespace Streaming_Muesic_WPF
             t.Wait();
         }
 
+        public IEnumerable<LocatedBridge> ScanForBridges()
+        {
+            return ScanNetworkAsync().Result;
+        }
+
         private async Task GetClient()
         {
             //For more info, tips and tricks on using async methods: https://stackoverflow.com/a/10351400
             IpAddress = await GetOrFindIP().ConfigureAwait(false);
 
-            if (String.IsNullOrEmpty(IpAddress))
+            if (string.IsNullOrEmpty(IpAddress))
             {
                 return;
             }
@@ -82,47 +87,71 @@ namespace Streaming_Muesic_WPF
             BridgeConnected?.Invoke(this, null); //Send list of lights in EventArgs?
         }
 
+        private async Task<IEnumerable<LocatedBridge>> ScanNetworkAsync()
+        {
+            var ip = settings.LastIPAddress;
+
+            if (!string.IsNullOrEmpty(ip))
+            {
+                return Enumerable.Empty<LocatedBridge>();
+            }
+
+            IBridgeLocator locator = new HttpBridgeLocator();
+            Console.WriteLine("Searching for bridges");
+            var bridgeIPs = await locator.LocateBridgesAsync(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
+            Console.WriteLine("Searching done");
+
+            return bridgeIPs;
+        }
+
         private async Task<string> GetOrFindIP()
         {
             Console.WriteLine("starting GetOrFindIP");
             var ip = settings.LastIPAddress;
 
             Console.WriteLine("ip: " + ip);
-            if (String.IsNullOrEmpty(ip))
+
+            if (!string.IsNullOrEmpty(ip))
             {
-                //IBridgeLocator locator = new HttpBridgeLocator();
-                IBridgeLocator locator = new SSDPBridgeLocator();
-                Console.WriteLine("Searching for bridges");
-                var bridgeIPs = await locator.LocateBridgesAsync(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
-                Console.WriteLine("Searching done");
-                ////For Windows 8 and .NET45 projects you can use the SSDPBridgeLocator which actually scans your network. 
-                ////See the included BridgeDiscoveryTests and the specific .NET and .WinRT projects
+                return ip;
+            }
 
-                if (!bridgeIPs.Any())
-                {
-                    Console.WriteLine("Scan did not find a Hue Bridge. Try suppling a IP address for the bridge");
-                    return null;
-                }
-                                
-                if (bridgeIPs.Count() == 1)
-                {
-                    ip = bridgeIPs.First().IpAddress;
-                    Console.WriteLine("Bridge found using IP address: " + ip);
+            IBridgeLocator locator = new HttpBridgeLocator();
+            Console.WriteLine("Searching for bridges");
+            var bridgeIPs = await locator.LocateBridgesAsync(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
+            Console.WriteLine("Searching done");
 
-                    //Store the new IP address
-                    settings.LastIPAddress = ip;
-                    settings.Save();
-                }
-                else
+            if (!bridgeIPs.Any())
+            {
+                Console.WriteLine("Scan did not find a Hue Bridge. Try suppling a IP address for the bridge");
+                return null;
+            }
+
+            if (bridgeIPs.Count() == 1)
+            {
+                ip = bridgeIPs.First().IpAddress;
+                Console.WriteLine("Bridge found using IP address: " + ip);
+
+                //Store the new IP address
+                settings.LastIPAddress = ip;
+                settings.Save();
+            }
+            else
+            {
+                Console.WriteLine("Found more than one bridge");
+
+                var bridges = new ObservableCollection<BridgeItem>();
+                foreach (var b in bridgeIPs)
                 {
-                    Console.WriteLine("Found more than one bridge");
-                    var dialog = new ListDialogBox();
-                    var bridges = new ObservableCollection<BridgeItem>();
-                    foreach (var b in bridgeIPs)
+                    bridges.Add(new BridgeItem(b));
+                }
+
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    var dialog = new ListDialogBox
                     {
-                        bridges.Add(new BridgeItem(b));
-                    }
-                    dialog.Items = bridges;
+                        Items = bridges
+                    };
                     Console.WriteLine("showing dialog");
                     dialog.ShowDialog();
 
@@ -135,24 +164,24 @@ namespace Streaming_Muesic_WPF
                         settings.LastIPAddress = ip;
                         settings.Save();
                     }
-                }
+                });
             }
 
             return ip;
         }
 
-        private async Task<String> GetOrRegisterKey()
+        private async Task<string> GetOrRegisterKey()
         {
             Console.WriteLine("Starting getting key");
             var key = settings.HueKey;
 
-            if (String.IsNullOrEmpty(key))
+            if (string.IsNullOrEmpty(key))
             {
                 Console.WriteLine("Starting registering key");
                 key = await client.RegisterAsync("streamingmuesic", "6UiL4alABwlLXtoXqp7nlQHMAORbKEyoFjSHdLFw");
                 Console.WriteLine("Done registering key: " + key);
 
-                if (!String.IsNullOrEmpty(key))
+                if (!string.IsNullOrEmpty(key))
                 {
                     //Store the new key
                     settings.HueKey = key;

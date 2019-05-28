@@ -23,7 +23,7 @@
                 <Label Content="IP Addr." HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top"/>
                 <Label x:Name="Key" Content="Label" HorizontalAlignment="Left" Margin="10,78,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.026,-2.74"/>
                 <Button x:Name="btnConnect" Content="Connect" HorizontalAlignment="Left" Margin="10,126,0,0" VerticalAlignment="Top" Width="75" Click="Btn_Connect_Click"/>
-                <Button x:Name="btnScan" Content="Search" HorizontalAlignment="Left" Margin="119,126,0,0" VerticalAlignment="Top" Width="75"/>
+                <Button x:Name="btnScan" Content="Search" HorizontalAlignment="Left" Margin="119,126,0,0" VerticalAlignment="Top" Width="75" Click="BtnScan_Click"/>
                 <ListBox x:Name="lbLights" HorizontalAlignment="Left" Height="208" Margin="10,161,0,0" VerticalAlignment="Top" Width="184"/>
             </Grid>
         </GroupBox>
