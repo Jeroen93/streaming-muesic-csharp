@@ -3,28 +3,98 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Streaming_Muesic_WPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <GroupBox Header="WASAPI" HorizontalAlignment="Left" Height="399" Margin="10,10,0,0" VerticalAlignment="Top" Width="168">
-            <Grid HorizontalAlignment="Left" Height="379" Margin="10,10,-2,-12" VerticalAlignment="Top" Width="148">
-                <Button x:Name="btnStart" Content="Start" HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top" Width="50" Click="Btn_Start_Click"/>
-                <Button x:Name="btnStop" Content="Stop" HorizontalAlignment="Left" Margin="65,69,0,0" VerticalAlignment="Top" Width="50" Click="Btn_Stop_Click" IsEnabled="False"/>
-                <ProgressBar x:Name="pbLeft" HorizontalAlignment="Left" Height="173" Margin="23,111,0,0" VerticalAlignment="Top" Width="24" RenderTransformOrigin="0.5,0.5" Orientation="Vertical" Maximum="1" SmallChange="0.001"/>
-                <ProgressBar x:Name="pbRight" HorizontalAlignment="Left" Height="173" Margin="78,111,0,0" VerticalAlignment="Top" Width="24
-                             " RenderTransformOrigin="0.5,0.5" Orientation="Vertical" Maximum="1" SmallChange="0.001"/>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <GroupBox Header="WASAPI" Grid.Column="0" Margin="10">
+            <Grid Margin="0,25">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="3*"/>
+                </Grid.RowDefinitions>
+
+                <Button Grid.Row="0" Grid.Column="0" 
+                        x:Name="btnStart" Content="Start"
+                        Margin="10,30"
+                        Click="Btn_Start_Click"/>
+                <Button Grid.Row="0" Grid.Column="1" 
+                        x:Name="btnStop" Content="Stop" 
+                        Margin="10,30" 
+                        Click="Btn_Stop_Click" IsEnabled="False"/>
+                
+                <ProgressBar Grid.Row="1" Grid.Column="0" 
+                             x:Name="pbLeft" 
+                             Height="173" Width="24"
+                             HorizontalAlignment="Right"
+                             Margin="0,0,15,0"
+                             Orientation="Vertical" 
+                             Maximum="1" SmallChange="0.001"/>
+                <ProgressBar Grid.Row="1" Grid.Column="1" 
+                             x:Name="pbRight" 
+                             Height="173" Width="24" 
+                             HorizontalAlignment="Left"
+                             Margin="15,0,0,0"
+                             Orientation="Vertical" 
+                             Maximum="1" SmallChange="0.001"/>
             </Grid>
         </GroupBox>
-        <GroupBox Header="Philips Hue" HorizontalAlignment="Left" Height="399" Margin="558,10,0,0" VerticalAlignment="Top" Width="224">
-            <Grid HorizontalAlignment="Left" Height="379" Margin="10,10,-2,-12" VerticalAlignment="Top" Width="204">
-                <TextBox x:Name="tbIP" HorizontalAlignment="Left" Height="23" Margin="85,41,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="109"/>
-                <TextBox x:Name="tbKey" HorizontalAlignment="Left" Height="23" Margin="85,82,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="109"/>
-                <Label Content="IP Addr." HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top"/>
-                <Label x:Name="Key" Content="Label" HorizontalAlignment="Left" Margin="10,78,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.026,-2.74"/>
-                <Button x:Name="btnConnect" Content="Connect" HorizontalAlignment="Left" Margin="10,126,0,0" VerticalAlignment="Top" Width="75" Click="Btn_Connect_Click"/>
-                <Button x:Name="btnScan" Content="Search" HorizontalAlignment="Left" Margin="119,126,0,0" VerticalAlignment="Top" Width="75" Click="BtnScan_Click"/>
-                <ListBox x:Name="lbLights" HorizontalAlignment="Left" Height="208" Margin="10,161,0,0" VerticalAlignment="Top" Width="184"/>
+        
+        <GroupBox Header="Philips Hue" Grid.Column="2">
+            <Grid Margin="5,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="6*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Content="IP Addr."
+                       Grid.Row="1" Margin="0,5"/>
+                <TextBox x:Name="tbIP" Margin="0,5" 
+                         Grid.Row="1" Grid.Column="1" 
+                         Grid.ColumnSpan="2" 
+                         Text="TextBox" TextWrapping="Wrap" />
+
+                <Label x:Name="Key" Content="Label" 
+                       Grid.Row="2" Margin="0,5" />
+                <TextBox x:Name="tbKey" Margin="0,5"
+                         Grid.Row="2" Grid.Column="1" 
+                         Grid.ColumnSpan="2" 
+                         Text="TextBox" TextWrapping="Wrap"/>
+                
+                <Button x:Name="btnConnect" Content="Connect" 
+                        Grid.Column="0" Grid.Row="3" 
+                        Margin="0, 5"
+                        Click="Btn_Connect_Click" />
+                <Button x:Name="btnScan" Content="Search" 
+                        Grid.Column="2" Grid.Row="3" 
+                        Margin="0, 5"
+                        Click="BtnScan_Click"/>
+                
+                <ListBox x:Name="lbLights" 
+                         Grid.Row="4" Grid.Column="0" 
+                         Grid.ColumnSpan="3"
+                         Margin="0, 5" />
             </Grid>
         </GroupBox>
 
