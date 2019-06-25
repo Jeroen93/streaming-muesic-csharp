@@ -14,12 +14,10 @@ namespace Streaming_Muesic_WPF
     class HuePlugin
     {
         public string IpAddress { get; private set; }
-        public string Key { get; private set; }
-        public IEnumerable<Light> Lights { get; private set; }
 
         public event EventHandler BridgeConnected;
 
-        private Settings settings;
+        private readonly Settings settings;
         private LocalHueClient client;        
 
         public HuePlugin()
@@ -27,19 +25,30 @@ namespace Streaming_Muesic_WPF
             settings = Settings.Default;            
         }
 
-        public void Connect()
+        public bool ConnectToLastKnownBridge()
         {
-            var t = GetClient();
-            t.Wait();
+            var ip = settings.LastIPAddress;
+            var key = settings.HueKey;
+
+            if (string.IsNullOrEmpty(ip) || string.IsNullOrEmpty(key))
+            {
+                return false;
+            }
+
+            client = new LocalHueClient(ip);
+            client.Initialize(key);
 
             if (ClientNotInitialized())
             {
-                MessageBox.Show("Could not connect to a bridge with specified Ip Address and Key");
-                return;
+                Console.WriteLine("Could not connect to last known bridge");
+                return false;
             }
 
-            t = GetLights();
-            t.Wait();
+            IpAddress = ip;
+            BridgeConnected?.Invoke(this, null); //Send list of lights in EventArgs?
+            Console.WriteLine($"Client initialized on IP Address {IpAddress} and with key {key}");
+
+            return true;
         }
 
         public IEnumerable<LocatedBridge> ScanForBridges()
@@ -47,61 +56,76 @@ namespace Streaming_Muesic_WPF
             return ScanNetworkAsync().Result;
         }
 
-        private async Task GetClient()
+        public IEnumerable<Light> GetLights()
         {
-            //For more info, tips and tricks on using async methods: https://stackoverflow.com/a/10351400
-            IpAddress = await GetOrFindIP().ConfigureAwait(false);
-
-            if (string.IsNullOrEmpty(IpAddress))
-            {
-                return;
-            }
-
-            client = new LocalHueClient(IpAddress);
-
-            Key = await GetOrRegisterKey().ConfigureAwait(false);
-
-            client.Initialize(Key);
-
-            if (ClientNotInitialized())
-            {
-                Console.WriteLine("Could not initialize client");
-                return;
-            }
-
-            Console.WriteLine($"Client initialized on IP Address {IpAddress} and with key {Key}");            
+            return GetLightsAsync().Result;
         }
 
-        private async Task GetLights()
+        private async Task<IEnumerable<Light>> GetLightsAsync()
         {
             if (ClientNotInitialized())
-                throw new InvalidOperationException("Hue client is not initialized");
-
-            Lights = await client.GetLightsAsync().ConfigureAwait(false);
-            if (Lights == null)
             {
-                Console.WriteLine("Could not enumerate list. Hue may not be reachable.");
-                return;
+                throw new InvalidOperationException("Hue client is not initialized");
             }
 
-            BridgeConnected?.Invoke(this, null); //Send list of lights in EventArgs?
+            //For more info, tips and tricks on using async methods: https://stackoverflow.com/a/10351400
+            IEnumerable<Light> lights = await client.GetLightsAsync().ConfigureAwait(false);
+
+            if (lights == null)
+            {
+                Console.WriteLine("Could not enumerate list. Hue may not be reachable.");
+                return Enumerable.Empty<Light>();
+            }
+
+            return lights;
         }
 
         private async Task<IEnumerable<LocatedBridge>> ScanNetworkAsync()
-        {
-            var ip = settings.LastIPAddress;
-
-            if (!string.IsNullOrEmpty(ip))
-            {
-                return Enumerable.Empty<LocatedBridge>();
-            }
-
+        {        
             IBridgeLocator locator = new HttpBridgeLocator();
             Console.WriteLine("Searching for bridges");
             var bridgeIPs = await locator.LocateBridgesAsync(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
             Console.WriteLine("Searching done");
 
             return bridgeIPs;
+        }
+
+        public void Connect(string address)
+        {
+            if (!ClientNotInitialized())
+            {
+                throw new InvalidOperationException("Already connected to a bridge");
+            }
+
+            if (string.IsNullOrWhiteSpace(address))
+            {
+                throw new ArgumentNullException(nameof(address));
+            }
+
+            client = new LocalHueClient(address);            
+
+            try
+            {
+                var appKey = GetAppKeyAsync().Result;
+
+                if (client.IsInitialized)
+                {
+                    settings.LastIPAddress = address;
+                    settings.HueKey = appKey;
+                    settings.Save();
+
+                    BridgeConnected?.Invoke(null, null);
+                }
+            }
+            catch (LinkButtonNotPressedException ex)
+            {
+                Console.WriteLine($"Link button was not pressed: {ex.Message}");
+            }
+        }
+
+        private async Task<string> GetAppKeyAsync()
+        {
+            return await client.RegisterAsync("streamingmuesic", "mydevice").ConfigureAwait(false);
         }
 
         private async Task<string> GetOrFindIP()
@@ -168,34 +192,6 @@ namespace Streaming_Muesic_WPF
             }
 
             return ip;
-        }
-
-        private async Task<string> GetOrRegisterKey()
-        {
-            Console.WriteLine("Starting getting key");
-            var key = settings.HueKey;
-
-            if (string.IsNullOrEmpty(key))
-            {
-                Console.WriteLine("Starting registering key");
-                key = await client.RegisterAsync("streamingmuesic", "6UiL4alABwlLXtoXqp7nlQHMAORbKEyoFjSHdLFw");
-                Console.WriteLine("Done registering key: " + key);
-
-                if (!string.IsNullOrEmpty(key))
-                {
-                    //Store the new key
-                    settings.HueKey = key;
-                    settings.Save();
-                }
-                else
-                {
-                    Console.WriteLine("Could not retrieve a key from the bridge");
-                    return null;
-                }                
-            }
-
-            Console.WriteLine("Key: " + key);
-            return key;
         }
 
         private bool ClientNotInitialized()

@@ -6,7 +6,6 @@ using System.Windows;
 using System.Windows.Threading;
 using NAudio.Wave;
 using Q42.HueApi;
-using Q42.HueApi.Models.Bridge;
 
 namespace Streaming_Muesic_WPF
 {
@@ -21,8 +20,8 @@ namespace Streaming_Muesic_WPF
         private float maxRight;
         private float vuLeft, vuRight;
         private int sampleCount;
-        private Action action;
-        private HuePlugin huePlugin;
+        private readonly Action action;
+        private readonly HuePlugin huePlugin;
 
         public MainWindow()
         {
@@ -32,6 +31,9 @@ namespace Streaming_Muesic_WPF
                 pbLeft.Value = vuLeft;
                 pbRight.Value = vuRight;
             });
+
+            huePlugin = new HuePlugin();
+            huePlugin.BridgeConnected += Hue_BridgeConnected;
         }
 
         private void Capture_RecordingStopped(object sender, StoppedEventArgs e)
@@ -77,15 +79,13 @@ namespace Streaming_Muesic_WPF
 
 
         private void Btn_Connect_Click(object sender, RoutedEventArgs e)
-        {
-            huePlugin = new HuePlugin();
-            huePlugin.BridgeConnected += Hue_BridgeConnected;
-            huePlugin.Connect();
+        {            
+            huePlugin.ConnectToLastKnownBridge();
         }
 
         private void Hue_BridgeConnected(object sender, EventArgs e)
         {
-            IEnumerable<Light> lights = huePlugin.Lights;
+            IEnumerable<Light> lights = huePlugin.GetLights();
 
             RunOnUIThread(new Action(() =>
             {
@@ -104,10 +104,7 @@ namespace Streaming_Muesic_WPF
 
         private void BtnScan_Click(object sender, RoutedEventArgs e)
         {
-            huePlugin = new HuePlugin();
-            huePlugin.BridgeConnected += Hue_BridgeConnected;
             var bridges = huePlugin.ScanForBridges().ToArray();
-            string ip;
 
             if (!bridges.Any())
             {
@@ -117,8 +114,10 @@ namespace Streaming_Muesic_WPF
 
             if (bridges.Length == 1)
             {
-                ip = bridges[0].IpAddress;
+                string ip = bridges[0].IpAddress;
                 Console.WriteLine("Bridge found using IP address: " + ip);
+
+                huePlugin.Connect(ip);
             }
             else
             {
@@ -136,7 +135,8 @@ namespace Streaming_Muesic_WPF
                 if (!dialog.IsCancelled)
                 {
                     var item = dialog.SelectedItem as BridgeItem;
-                    ip = item.Bridge.IpAddress;
+                    var ip = item.Bridge.IpAddress;
+                    huePlugin.Connect(ip);
                 }
             }
         }

@@ -25,7 +25,7 @@ namespace Streaming_Muesic_WPF.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("172.16.10.77")]
+        [global::System.Configuration.DefaultSettingValueAttribute("172.16.10.33")]
         public string LastIPAddress {
             get {
                 return ((string)(this["LastIPAddress"]));
@@ -37,7 +37,7 @@ namespace Streaming_Muesic_WPF.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("6UiL4alABwlLXtoXqp7nlQHMAORbKEyoFjSHdLFw")]
+        [global::System.Configuration.DefaultSettingValueAttribute("NHw8DloqjV4f0-cpFjexkmdd0v41g-n24BNprAJc")]
         public string HueKey {
             get {
                 return ((string)(this["HueKey"]));
