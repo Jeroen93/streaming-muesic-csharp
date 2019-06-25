@@ -4,13 +4,13 @@ namespace Streaming_Muesic_WPF
 {
     public class BridgeItem
     {
-        private string displayName;
-        private LocatedBridge bridge;
+        private readonly string displayName;
+        private readonly LocatedBridge bridge;
 
         public BridgeItem(LocatedBridge bridge)
         {
             this.bridge = bridge;
-            displayName = bridge.BridgeId;
+            displayName = bridge.IpAddress;
         }
 
         public string DisplayName

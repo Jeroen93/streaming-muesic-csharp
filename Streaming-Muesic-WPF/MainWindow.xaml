@@ -74,14 +74,14 @@
                 <TextBox x:Name="tbIP" Margin="0,5" 
                          Grid.Row="1" Grid.Column="1" 
                          Grid.ColumnSpan="2" 
-                         Text="TextBox" TextWrapping="Wrap" />
+                         TextWrapping="Wrap" />
 
                 <Label x:Name="Key" Content="Label" 
                        Grid.Row="2" Margin="0,5" />
                 <TextBox x:Name="tbKey" Margin="0,5"
                          Grid.Row="2" Grid.Column="1" 
                          Grid.ColumnSpan="2" 
-                         Text="TextBox" TextWrapping="Wrap"/>
+                         TextWrapping="Wrap"/>
                 
                 <Button x:Name="btnConnect" Content="Connect" 
                         Grid.Column="0" Grid.Row="3" 

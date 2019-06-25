@@ -21,7 +21,7 @@ namespace Streaming_Muesic_WPF
         private string selectText = "Select";
         private ObservableCollection<BridgeItem> items;
         private BridgeItem selectedItem = null;
-        
+
         public ListDialogBox()
         {
             InitializeComponent();
@@ -129,7 +129,7 @@ namespace Streaming_Muesic_WPF
      */
         public bool IsCancelled
         {   //A simple null-check is performed (the caller can do this too).
-            get { return (SelectedItem == null); }
+            get { return SelectedItem == null; }
         }
     }
 }
