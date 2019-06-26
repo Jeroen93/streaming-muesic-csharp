@@ -3,10 +3,10 @@
   <Profiles />
   <Settings>
     <Setting Name="LastIPAddress" Type="System.String" Scope="User">
-      <Value Profile="(Default)">172.16.10.33</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="HueKey" Type="System.String" Scope="User">
-      <Value Profile="(Default)">NHw8DloqjV4f0-cpFjexkmdd0v41g-n24BNprAJc</Value>
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

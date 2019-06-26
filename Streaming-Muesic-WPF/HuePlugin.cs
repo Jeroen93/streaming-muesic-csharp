@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using Q42.HueApi;
 using Q42.HueApi.Interfaces;
 using Q42.HueApi.Models.Bridge;
@@ -17,18 +15,12 @@ namespace Streaming_Muesic_WPF
 
         public event EventHandler BridgeConnected;
 
-        private readonly Settings settings;
         private LocalHueClient client;        
-
-        public HuePlugin()
-        {
-            settings = Settings.Default;            
-        }
 
         public bool ConnectToLastKnownBridge()
         {
-            var ip = settings.LastIPAddress;
-            var key = settings.HueKey;
+            var ip = Settings.Default.LastIPAddress;
+            var key = Settings.Default.HueKey;
 
             if (string.IsNullOrEmpty(ip) || string.IsNullOrEmpty(key))
             {
@@ -46,7 +38,7 @@ namespace Streaming_Muesic_WPF
 
             IpAddress = ip;
             BridgeConnected?.Invoke(this, null); //Send list of lights in EventArgs?
-            Console.WriteLine($"Client initialized on IP Address {IpAddress} and with key {key}");
+            Console.WriteLine($"Reconnected to client on IP Address {IpAddress} and with key {key}");
 
             return true;
         }
@@ -122,77 +114,6 @@ namespace Streaming_Muesic_WPF
             {
                 Console.WriteLine($"Link button was not pressed: {ex.Message}");
             }
-        }
-
-        private async Task<string> GetAppKeyAsync()
-        {
-            return await client.RegisterAsync("streamingmuesic", "mydevice").ConfigureAwait(false);
-        }
-
-        private async Task<string> GetOrFindIP()
-        {
-            Console.WriteLine("starting GetOrFindIP");
-            var ip = settings.LastIPAddress;
-
-            Console.WriteLine("ip: " + ip);
-
-            if (!string.IsNullOrEmpty(ip))
-            {
-                return ip;
-            }
-
-            IBridgeLocator locator = new HttpBridgeLocator();
-            Console.WriteLine("Searching for bridges");
-            var bridgeIPs = await locator.LocateBridgesAsync(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
-            Console.WriteLine("Searching done");
-
-            if (!bridgeIPs.Any())
-            {
-                Console.WriteLine("Scan did not find a Hue Bridge. Try suppling a IP address for the bridge");
-                return null;
-            }
-
-            if (bridgeIPs.Count() == 1)
-            {
-                ip = bridgeIPs.First().IpAddress;
-                Console.WriteLine("Bridge found using IP address: " + ip);
-
-                //Store the new IP address
-                settings.LastIPAddress = ip;
-                settings.Save();
-            }
-            else
-            {
-                Console.WriteLine("Found more than one bridge");
-
-                var bridges = new ObservableCollection<BridgeItem>();
-                foreach (var b in bridgeIPs)
-                {
-                    bridges.Add(new BridgeItem(b));
-                }
-
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    var dialog = new ListDialogBox
-                    {
-                        Items = bridges
-                    };
-                    Console.WriteLine("showing dialog");
-                    dialog.ShowDialog();
-
-                    if (!dialog.IsCancelled)
-                    {
-                        var item = dialog.SelectedItem as BridgeItem;
-                        ip = item.Bridge.IpAddress;
-
-                        //Store the new IP address
-                        settings.LastIPAddress = ip;
-                        settings.Save();
-                    }
-                });
-            }
-
-            return ip;
         }
 
         private bool ClientNotInitialized()
