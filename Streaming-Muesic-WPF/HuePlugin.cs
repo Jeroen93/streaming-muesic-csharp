@@ -90,7 +90,7 @@ namespace Streaming_Muesic_WPF
             return bridgeIPs;
         }
 
-        public void Connect(string address)
+        public async void Connect(string address)
         {
             if (!ClientNotInitialized())
             {
@@ -106,14 +106,15 @@ namespace Streaming_Muesic_WPF
 
             try
             {
-                var appKey = GetAppKeyAsync().Result;
+                var appKey = await client.RegisterAsync("streamingmuesic", "mydevice").ConfigureAwait(false);
 
                 if (client.IsInitialized)
                 {
-                    settings.LastIPAddress = address;
-                    settings.HueKey = appKey;
-                    settings.Save();
+                    Settings.Default.LastIPAddress = address;
+                    Settings.Default.HueKey = appKey;
+                    Settings.Default.Save();
 
+                    Console.WriteLine($"Connected to new client at {address} with key {appKey}");
                     BridgeConnected?.Invoke(null, null);
                 }
             }
