@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Streaming_Muesic_WPF.Model;
+using Streaming_Muesic_WPF.Utils;
 using System.Windows;
 
 namespace Streaming_Muesic_WPF
@@ -13,5 +9,16 @@ namespace Streaming_Muesic_WPF
     /// </summary>
     public partial class App : Application
     {
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            var mainWindow = new MainWindow();
+
+            var inputModules = ReflectionHelper.CreateAllInstancesOf<IInputModule>();
+
+            var vm = new VmMainWindow(inputModules);
+            mainWindow.DataContext = vm;
+            mainWindow.Closing += (s, args) => vm.SelectedInputModule.Deactivate();
+            mainWindow.Show();
+        }
     }
 }

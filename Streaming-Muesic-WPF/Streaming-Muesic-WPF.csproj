@@ -145,10 +145,25 @@
     <Compile Include="dialog\ListDialogBox.xaml.cs">
       <DependentUpon>ListDialogBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Input\Wasapi\WasapiPlugin.cs" />
+    <Compile Include="Input\Wasapi\WasapiView.xaml.cs">
+      <DependentUpon>WasapiView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Model\IInputModule.cs" />
+    <Compile Include="Model\IModule.cs" />
+    <Compile Include="Input\InputModuleBase.cs" />
+    <Compile Include="Model\IOutputModule.cs" />
+    <Compile Include="Model\IProcessModule.cs" />
     <Compile Include="SampleAggregator.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Utils\ReflectionHelper.cs" />
+    <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="VmMainWindow.cs" />
     <Page Include="dialog\ListDialogBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Input\Wasapi\WasapiView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

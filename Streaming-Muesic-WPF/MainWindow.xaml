@@ -14,41 +14,27 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <GroupBox Header="WASAPI" Grid.Column="0" Margin="10">
-            <Grid Margin="0,25">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
+        <GroupBox Header="Input" Grid.Column="0">
+            <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="3*"/>
                 </Grid.RowDefinitions>
 
-                <Button Grid.Row="0" Grid.Column="0" 
-                        x:Name="btnStart" Content="Start"
-                        Margin="10,30"
-                        Click="Btn_Start_Click"/>
-                <Button Grid.Row="0" Grid.Column="1" 
-                        x:Name="btnStop" Content="Stop" 
-                        Margin="10,30" 
-                        Click="Btn_Stop_Click" IsEnabled="False"/>
+                <ListBox Grid.Row="0" 
+                         Margin="5"
+                         ItemsSource="{Binding InputModules}" 
+                         SelectedItem="{Binding SelectedInputModule, Mode=TwoWay}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
                 
-                <ProgressBar Grid.Row="1" Grid.Column="0" 
-                             x:Name="pbLeft" 
-                             Height="173" Width="24"
-                             HorizontalAlignment="Right"
-                             Margin="0,0,15,0"
-                             Orientation="Vertical" 
-                             Maximum="1" SmallChange="0.001"/>
-                <ProgressBar Grid.Row="1" Grid.Column="1" 
-                             x:Name="pbRight" 
-                             Height="173" Width="24" 
-                             HorizontalAlignment="Left"
-                             Margin="15,0,0,0"
-                             Orientation="Vertical" 
-                             Maximum="1" SmallChange="0.001"/>
+                <ContentPresenter x:Name="contentPresenter" Grid.Row="1" 
+                                  Content="{Binding InputUI}" />
+
             </Grid>
         </GroupBox>
         
