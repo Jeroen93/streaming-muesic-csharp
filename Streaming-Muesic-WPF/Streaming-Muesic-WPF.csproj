@@ -147,6 +147,7 @@
     </Compile>
     <Compile Include="SampleAggregator.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Utils\ReflectionHelper.cs" />
     <Page Include="dialog\ListDialogBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
