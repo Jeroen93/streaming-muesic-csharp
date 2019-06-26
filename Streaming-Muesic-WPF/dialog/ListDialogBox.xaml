@@ -3,30 +3,53 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Streaming_Muesic_WPF"
         mc:Ignorable="d"
-        Title="ListDialogBox" Height="450" Width="800">
+        Title="Found bridges" Height="300" Width="250" ResizeMode="NoResize">
     <Grid>
-        <TextBlock Text="{Binding Prompt}" TextWrapping="Wrap" />
 
-        <Button Content="{Binding SelectText}" Click="BtnSelect_Click" Name="BtnSelect" />
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="5*" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        
+        <TextBlock Grid.Row="0" Text="{Binding Prompt}" 
+                   Margin="10,0,0,0"
+                   TextWrapping="Wrap" VerticalAlignment="Center" />
 
-        <Button Content=" Cancel" Name="BtnCancel" Click="BtnCancel_Click" />
-
-        <ListBox ItemsSource="{Binding Items}" Name="LstItems"        
-             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+        <ListBox Grid.Row="1" 
+                 ItemsSource="{Binding Items}" Name="LstItems"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
                     <Setter Property="HorizontalContentAlignment"  Value="Stretch"/>
                 </Style>
             </ListBox.ItemContainerStyle>
+            
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <DockPanel>                   
-                        <Label Content="{Binding DisplayName}" MouseDoubleClick="LstItem_MouseDoubleClick"/>
+                        <Label Content="{Binding DisplayName}" 
+                               MouseDoubleClick="LstItem_MouseDoubleClick"/>
                     </DockPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="1" 
+                    Content="{Binding SelectText}" 
+                    Click="BtnSelect_Click" Name="BtnSelect" />
+
+            <Button Grid.Column="0" 
+                    Content="Cancel" Name="BtnCancel" Click="BtnCancel_Click" />
+        </Grid>
+        
     </Grid>
 </Window>
