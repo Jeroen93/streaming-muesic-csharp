@@ -140,9 +140,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="dialog\BridgeItem.cs" />
+    <Compile Include="Output\Hue\Dialog\BridgeItem.cs" />
     <Compile Include="HuePlugin.cs" />
-    <Compile Include="dialog\ListDialogBox.xaml.cs">
+    <Compile Include="Output\Hue\Dialog\ListDialogBox.xaml.cs">
       <DependentUpon>ListDialogBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Input\Wasapi\WasapiPlugin.cs" />
@@ -164,7 +164,7 @@
     <Compile Include="Utils\ReflectionHelper.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="VmMainWindow.cs" />
-    <Page Include="dialog\ListDialogBox.xaml">
+    <Page Include="Output\Hue\Dialog\ListDialogBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
-namespace Streaming_Muesic_WPF
+namespace Streaming_Muesic_WPF.Output.Hue.dialog
 {
     /// <summary>
     /// Interaction logic for ListDialogBox.xaml
@@ -18,9 +18,8 @@ namespace Streaming_Muesic_WPF
 
         //Local copies of all the properties. (with default values)
         private string prompt = "Select a bridge from the list.";
-        private string selectText = "Select";
+        private string selectText = "Connect";
         private ObservableCollection<BridgeItem> items;
-        private BridgeItem selectedItem = null;
 
         public ListDialogBox()
         {
@@ -76,7 +75,7 @@ namespace Streaming_Muesic_WPF
                 if (prompt != value)
                 {
                     prompt = value;
-                    RaisePropertyChanged("Prompt");
+                    RaisePropertyChanged(nameof(Prompt));
                 }
             }
         }
@@ -90,7 +89,7 @@ namespace Streaming_Muesic_WPF
                 if (selectText != value)
                 {
                     selectText = value;
-                    RaisePropertyChanged("SelectText");
+                    RaisePropertyChanged(nameof(SelectText));
                 }
             }
         }
@@ -105,7 +104,7 @@ namespace Streaming_Muesic_WPF
             set
             {
                 items = value;
-                RaisePropertyChanged("Items");
+                RaisePropertyChanged(nameof(Items));
             }
         }
 
@@ -115,14 +114,7 @@ namespace Streaming_Muesic_WPF
         /* This property contains either the selected INamedItem, or null if
          * no selection is made.
          */
-        public BridgeItem SelectedItem
-        {
-            get { return selectedItem; }
-            private set
-            {
-                selectedItem = value;
-            }
-        }
+        public BridgeItem SelectedItem { get; private set; } = null;
 
         /* This property indicates if a selection was made.
      * The caller should check this property before trying to use the selected item.

@@ -1,6 +1,7 @@
 ﻿using Q42.HueApi;
 using Q42.HueApi.Interfaces;
 using Q42.HueApi.Models.Bridge;
+using Streaming_Muesic_WPF.Output.Hue.dialog;
 using Streaming_Muesic_WPF.Properties;
 using System;
 using System.Collections.Generic;
