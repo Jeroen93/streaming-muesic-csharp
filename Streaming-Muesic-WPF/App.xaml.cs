@@ -21,9 +21,9 @@ namespace Streaming_Muesic_WPF
             mainWindow.DataContext = vm;
             mainWindow.Closing += (s, args) =>
             {
-                vm.SelectedInputModule.Deactivate();
-                vm.SelectedProcessModule.Deactivate();
-                vm.SelectedOutputModule.Deactivate();
+                vm.SelectedInputModule?.Deactivate();
+                vm.SelectedProcessModule?.Deactivate();
+                vm.SelectedOutputModule?.Deactivate();
             };
 
             mainWindow.Show();
