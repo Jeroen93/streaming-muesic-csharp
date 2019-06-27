@@ -141,7 +141,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Output\Hue\Dialog\BridgeItem.cs" />
-    <Compile Include="HuePlugin.cs" />
     <Compile Include="Output\Hue\Dialog\ListDialogBox.xaml.cs">
       <DependentUpon>ListDialogBox.xaml</DependentUpon>
     </Compile>
