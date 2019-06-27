@@ -140,14 +140,35 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="dialog\BridgeItem.cs" />
+    <Compile Include="Output\Hue\Dialog\BridgeItem.cs" />
     <Compile Include="HuePlugin.cs" />
-    <Compile Include="dialog\ListDialogBox.xaml.cs">
+    <Compile Include="Output\Hue\Dialog\ListDialogBox.xaml.cs">
       <DependentUpon>ListDialogBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Input\Wasapi\WasapiPlugin.cs" />
+    <Compile Include="Input\Wasapi\WasapiView.xaml.cs">
+      <DependentUpon>WasapiView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Model\IInputModule.cs" />
+    <Compile Include="Model\IModule.cs" />
+    <Compile Include="Input\InputModuleBase.cs" />
+    <Compile Include="Model\IOutputModule.cs" />
+    <Compile Include="Model\IProcessModule.cs" />
+    <Compile Include="Output\Hue\HuePlugin.cs" />
+    <Compile Include="Output\Hue\HueView.xaml.cs">
+      <DependentUpon>HueView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Output\OutputModuleBase.cs" />
     <Compile Include="SampleAggregator.cs" />
     <Compile Include="Settings.cs" />
-    <Page Include="dialog\ListDialogBox.xaml">
+    <Compile Include="Utils\ReflectionHelper.cs" />
+    <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="VmMainWindow.cs" />
+    <Page Include="Output\Hue\Dialog\ListDialogBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Input\Wasapi\WasapiView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -163,6 +184,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Output\Hue\HueView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="minim\BeatDetect.cs" />
