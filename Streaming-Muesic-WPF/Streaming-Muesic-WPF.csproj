@@ -154,6 +154,11 @@
     <Compile Include="Input\InputModuleBase.cs" />
     <Compile Include="Model\IOutputModule.cs" />
     <Compile Include="Model\IProcessModule.cs" />
+    <Compile Include="Output\Hue\HuePlugin.cs" />
+    <Compile Include="Output\Hue\HueView.xaml.cs">
+      <DependentUpon>HueView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Output\OutputModuleBase.cs" />
     <Compile Include="SampleAggregator.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Utils\ReflectionHelper.cs" />
@@ -179,6 +184,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Output\Hue\HueView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="minim\BeatDetect.cs" />

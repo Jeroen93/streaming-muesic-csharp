@@ -9,18 +9,26 @@ namespace Streaming_Muesic_WPF
     internal class VmMainWindow : ViewModelBase
     {
         private IInputModule selectedInputModule;
+        private IOutputModule selectedOutputModule;
 
-        public VmMainWindow(IEnumerable<IInputModule> inputs)
+        public VmMainWindow(IEnumerable<IInputModule> inputs, IEnumerable<IOutputModule> outputs)
         {
             InputModules = inputs.OrderBy(i => i.Name).ToList();
+            OutputModules = outputs.OrderBy(o => o.Name).ToList();
 
             if (InputModules.Count > 0)
             {
                 SelectedInputModule = InputModules[0];
             }
+
+            if (OutputModules.Count > 0)
+            {
+                SelectedOutputModule = OutputModules[0];
+            }
         }
 
         public List<IInputModule> InputModules { get; }
+        public List<IOutputModule> OutputModules { get; }
 
         public IInputModule SelectedInputModule
         {
@@ -37,6 +45,22 @@ namespace Streaming_Muesic_WPF
             }
         }
 
+        public IOutputModule SelectedOutputModule
+        {
+            get => selectedOutputModule;
+            set
+            {
+                if (value != selectedOutputModule)
+                {
+                    selectedOutputModule?.Deactivate();
+                    selectedOutputModule = value;
+                    OnPropertyChanged(nameof(SelectedOutputModule));
+                    OnPropertyChanged(nameof(OutputUI));
+                }
+            }
+        }
+
         public UserControl InputUI => SelectedInputModule?.UserInterface;
+        public UserControl OutputUI => SelectedOutputModule?.UserInterface;
     }
 }

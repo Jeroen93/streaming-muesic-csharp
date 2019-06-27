@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="Streaming Muesic" Height="450" Width="800"
         MinHeight="450" MinWidth="800">
     <Grid>
 
@@ -21,8 +21,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <ComboBox Grid.Row="0"
-                          Margin="5"
+                <ComboBox Grid.Row="0" Margin="5"
                           ItemsSource="{Binding InputModules}"
                           SelectedItem="{Binding SelectedInputModule, Mode=TwoWay}">
                     <ComboBox.ItemTemplate>
@@ -32,56 +31,30 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
                 
-                <ContentPresenter x:Name="contentPresenter" Grid.Row="1" 
-                                  Content="{Binding InputUI}" />
+                <ContentPresenter Grid.Row="1" Content="{Binding InputUI}" />
 
             </Grid>
         </GroupBox>
         
-        <GroupBox Header="Philips Hue" Grid.Column="2">
-            <Grid Margin="5,0">
+        <GroupBox Header="Output" Grid.Column="2">
+            <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="6*" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="2*" />
-                </Grid.ColumnDefinitions>
 
-                <Label Content="IP Addr."
-                       Grid.Row="1" Margin="0,5"/>
-                <TextBox x:Name="tbIP" Margin="0,5" 
-                         Grid.Row="1" Grid.Column="1" 
-                         Grid.ColumnSpan="2" 
-                         TextWrapping="Wrap" />
+                <ComboBox Grid.Row="0" Margin="5"
+                          ItemsSource="{Binding OutputModules}"
+                          SelectedItem="{Binding SelectedOutputModule, Mode=TwoWay}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
-                <Label x:Name="Key" Content="Label" 
-                       Grid.Row="2" Margin="0,5" />
-                <TextBox x:Name="tbKey" Margin="0,5"
-                         Grid.Row="2" Grid.Column="1" 
-                         Grid.ColumnSpan="2" 
-                         TextWrapping="Wrap"/>
-                
-                <Button x:Name="btnConnect" Content="Connect" 
-                        Grid.Column="0" Grid.Row="3" 
-                        Margin="0, 5"
-                        Click="Btn_Connect_Click" />
-                <Button x:Name="btnScan" Content="Search" 
-                        Grid.Column="2" Grid.Row="3" 
-                        Margin="0, 5"
-                        Click="BtnScan_Click"/>
-                
-                <ListBox x:Name="lbLights" 
-                         Grid.Row="4" Grid.Column="0" 
-                         Grid.ColumnSpan="3"
-                         Margin="0, 5" />
+                <ContentPresenter Grid.Row="1" Content="{Binding OutputUI}" />
+
             </Grid>
         </GroupBox>
 
