@@ -9,16 +9,24 @@ namespace Streaming_Muesic_WPF
     internal class VmMainWindow : ViewModelBase
     {
         private IInputModule selectedInputModule;
+        private IProcessModule selectedProcessModule;
         private IOutputModule selectedOutputModule;
 
-        public VmMainWindow(IEnumerable<IInputModule> inputs, IEnumerable<IOutputModule> outputs)
+        public VmMainWindow(IEnumerable<IInputModule> inputs,
+            IEnumerable<IProcessModule> processes, IEnumerable<IOutputModule> outputs)
         {
             InputModules = inputs.OrderBy(i => i.Name).ToList();
+            ProcessModules = processes.OrderBy(p => p.Name).ToList();
             OutputModules = outputs.OrderBy(o => o.Name).ToList();
 
             if (InputModules.Count > 0)
             {
                 SelectedInputModule = InputModules[0];
+            }
+
+            if (ProcessModules.Count > 0)
+            {
+                SelectedProcessModule = ProcessModules[0];
             }
 
             if (OutputModules.Count > 0)
@@ -28,6 +36,7 @@ namespace Streaming_Muesic_WPF
         }
 
         public List<IInputModule> InputModules { get; }
+        public List<IProcessModule> ProcessModules { get; }
         public List<IOutputModule> OutputModules { get; }
 
         public IInputModule SelectedInputModule
@@ -41,6 +50,21 @@ namespace Streaming_Muesic_WPF
                     selectedInputModule = value;
                     OnPropertyChanged(nameof(SelectedInputModule));
                     OnPropertyChanged(nameof(InputUI));
+                }
+            }
+        }
+
+        public IProcessModule SelectedProcessModule
+        {
+            get => selectedProcessModule;
+            set
+            {
+                if (value != selectedProcessModule)
+                {
+                    selectedProcessModule?.Deactivate();
+                    selectedProcessModule = value;
+                    OnPropertyChanged(nameof(SelectedProcessModule));
+                    OnPropertyChanged(nameof(ProcessUI));
                 }
             }
         }
@@ -61,6 +85,7 @@ namespace Streaming_Muesic_WPF
         }
 
         public UserControl InputUI => SelectedInputModule?.UserInterface;
+        public UserControl ProcessUI => SelectedProcessModule?.UserInterface;
         public UserControl OutputUI => SelectedOutputModule?.UserInterface;
     }
 }

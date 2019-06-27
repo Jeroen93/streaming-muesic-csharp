@@ -14,13 +14,15 @@ namespace Streaming_Muesic_WPF
             var mainWindow = new MainWindow();
 
             var inputModules = ReflectionHelper.CreateAllInstancesOf<IInputModule>();
+            var processModules = ReflectionHelper.CreateAllInstancesOf<IProcessModule>();
             var outputModules = ReflectionHelper.CreateAllInstancesOf<IOutputModule>();
 
-            var vm = new VmMainWindow(inputModules, outputModules);
+            var vm = new VmMainWindow(inputModules, processModules, outputModules);
             mainWindow.DataContext = vm;
             mainWindow.Closing += (s, args) =>
             {
                 vm.SelectedInputModule.Deactivate();
+                vm.SelectedProcessModule.Deactivate();
                 vm.SelectedOutputModule.Deactivate();
             };
 
