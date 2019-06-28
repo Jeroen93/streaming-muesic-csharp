@@ -165,6 +165,7 @@
       <DependentUpon>ColorOnVolumeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Process\ProcessModuleBase.cs" />
+    <Compile Include="Process\ProcessViewModelBase.cs" />
     <Compile Include="Utils\SampleAggregator.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Utils\ReflectionHelper.cs" />

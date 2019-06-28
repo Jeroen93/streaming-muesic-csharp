@@ -81,7 +81,7 @@ namespace Streaming_Muesic_WPF.Input.Wasapi
                 float leftSample = BitConverter.ToSingle(e.Buffer, i);
                 float rightSample = BitConverter.ToSingle(e.Buffer, i + 4);
 
-                //aggregator.Add(leftSample, rightSample);
+                aggregator.Add(leftSample, rightSample);
 
                 maxLeft = Math.Max(maxLeft, Math.Abs(leftSample));
                 maxRight = Math.Max(maxRight, Math.Abs(rightSample));
@@ -118,6 +118,5 @@ namespace Streaming_Muesic_WPF.Input.Wasapi
             capture?.Dispose();
             capture = null;
         }
-
     }
 }

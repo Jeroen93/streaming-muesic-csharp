@@ -1,4 +1,5 @@
 ﻿using Streaming_Muesic_WPF.Model;
+using Streaming_Muesic_WPF.Utils;
 using System;
 using System.Windows.Controls;
 
@@ -24,6 +25,12 @@ namespace Streaming_Muesic_WPF.Process
             var d = view.DataContext as IDisposable;
             d?.Dispose();
             view = null;
+        }
+
+        public EventHandler<DataAvailableEventArgs> GetDataAvailableListener()
+        {
+            var vm = view.DataContext as ProcessViewModelBase;
+            return vm.GetDataAvailableListener();
         }
     }
 }

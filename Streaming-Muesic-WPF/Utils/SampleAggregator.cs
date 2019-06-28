@@ -1,9 +1,11 @@
 ﻿using System;
 
-namespace Streaming_Muesic_WPF
+namespace Streaming_Muesic_WPF.Utils
 {
-    internal class SampleAggregator
+    internal class SampleAggregator : IDisposable
     {
+        public static event EventHandler<DataAvailableEventArgs> DataAvailable;
+
         public int BufferLength { get; }
 
         public float[] Left { get; private set; }
@@ -39,12 +41,35 @@ namespace Streaming_Muesic_WPF
                 Array.Copy(tempBufferLeft, 0, Left, 0, BufferLength);
                 Array.Copy(tempBufferRight, 0, Right, 0, BufferLength);
                 Array.Copy(tempBufferMix, 0, Mix, 0, BufferLength);
+
+                DataAvailable?.Invoke(this, new DataAvailableEventArgs { Left = Left, Right = Right });
             }
         }
 
         private bool IsPowerOfTwo(int x)
         {
-            return (x > 0) && ((x & (x - 1)) == 0);
+            return x > 0 && (x & x - 1) == 0;
         }
+
+        public void AddDataListener(EventHandler<DataAvailableEventArgs> handler)
+        {
+            DataAvailable += handler;
+        }
+
+        public void RemoveDataListener(EventHandler<DataAvailableEventArgs> handler)
+        {
+            DataAvailable -= handler;
+        }
+
+        public void Dispose()
+        {
+            DataAvailable = null;
+        }
+    }
+
+    internal class DataAvailableEventArgs : EventArgs
+    {
+        public float[] Left { get; set; }
+        public float[] Right { get; set; }
     }
 }

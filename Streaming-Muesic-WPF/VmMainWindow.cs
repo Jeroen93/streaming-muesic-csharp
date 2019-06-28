@@ -46,8 +46,15 @@ namespace Streaming_Muesic_WPF
             {
                 if (value != selectedInputModule)
                 {
+                    selectedInputModule?.RemoveDataAvailableListener((s, e) => { });
                     selectedInputModule?.Deactivate();
                     selectedInputModule = value;
+
+                    if (selectedProcessModule != null)
+                    {
+                        selectedInputModule.AddDataAvailableListener((s, e) => { });
+                    }
+                    
                     OnPropertyChanged(nameof(SelectedInputModule));
                     OnPropertyChanged(nameof(InputUI));
                 }
