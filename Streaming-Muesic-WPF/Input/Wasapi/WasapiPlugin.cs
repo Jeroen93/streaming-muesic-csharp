@@ -6,7 +6,7 @@ namespace Streaming_Muesic_WPF.Input.Wasapi
     {
         protected override UserControl CreateView()
         {
-            return new WasapiView();
+            return new WasapiView { DataContext = new WasapiViewModel() };
         }
 
         public override string Name => "WASAPI";
