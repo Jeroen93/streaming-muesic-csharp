@@ -158,7 +158,12 @@
       <DependentUpon>HueView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Output\OutputModuleBase.cs" />
-    <Compile Include="SampleAggregator.cs" />
+    <Compile Include="Process\ColorOnVolume\ColorOnVolumePlugin.cs" />
+    <Compile Include="Process\ColorOnVolume\ColorOnVolumeView.xaml.cs">
+      <DependentUpon>ColorOnVolumeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Process\ProcessModuleBase.cs" />
+    <Compile Include="Utils\SampleAggregator.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Utils\ReflectionHelper.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
@@ -184,6 +189,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Output\Hue\HueView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Process\ColorOnVolume\ColorOnVolumeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
