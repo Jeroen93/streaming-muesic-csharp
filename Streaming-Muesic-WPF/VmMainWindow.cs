@@ -46,13 +46,17 @@ namespace Streaming_Muesic_WPF
             {
                 if (value != selectedInputModule)
                 {
-                    selectedInputModule?.RemoveDataAvailableListener((s, e) => { });
+                    if (selectedInputModule != null && selectedProcessModule != null)
+                    {
+                        selectedInputModule.RemoveDataAvailableListener(selectedProcessModule.GetDataAvailableListener());
+                    }
+
                     selectedInputModule?.Deactivate();
                     selectedInputModule = value;
 
-                    if (selectedProcessModule != null)
+                    if (selectedInputModule != null && selectedProcessModule != null)
                     {
-                        selectedInputModule.AddDataAvailableListener((s, e) => { });
+                        selectedInputModule.AddDataAvailableListener(selectedProcessModule.GetDataAvailableListener());
                     }
                     
                     OnPropertyChanged(nameof(SelectedInputModule));
@@ -68,10 +72,20 @@ namespace Streaming_Muesic_WPF
             {
                 if (value != selectedProcessModule)
                 {
+                    if (selectedInputModule != null && selectedProcessModule != null)
+                    {
+                        selectedInputModule.RemoveDataAvailableListener(selectedProcessModule.GetDataAvailableListener());
+                    }
+
                     selectedProcessModule?.Deactivate();
                     selectedProcessModule = value;
                     OnPropertyChanged(nameof(SelectedProcessModule));
                     OnPropertyChanged(nameof(ProcessUI));
+
+                    if (selectedInputModule != null && selectedProcessModule != null)
+                    {
+                        selectedInputModule.AddDataAvailableListener(selectedProcessModule.GetDataAvailableListener());
+                    }                    
                 }
             }
         }

@@ -8,7 +8,7 @@ namespace Streaming_Muesic_WPF.Process.ColorOnVolume
 
         protected override UserControl CreateView()
         {
-            return new ColorOnVolumeView();
+            return new ColorOnVolumeView { DataContext = new ColorOnVolumeViewModel() };
         }
     }
 }

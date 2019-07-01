@@ -26,6 +26,7 @@ namespace Streaming_Muesic_WPF.Utils
 
             BufferLength = bufferLength;
             tempBufferLeft = tempBufferRight = tempBufferMix = new float[bufferLength];
+            Left = Right = Mix = new float[bufferLength];
         }
 
         public void Add(float valueL, float valueR)

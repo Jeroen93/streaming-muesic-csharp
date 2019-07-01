@@ -29,13 +29,13 @@ namespace Streaming_Muesic_WPF.Input
 
         public void AddDataAvailableListener(EventHandler<DataAvailableEventArgs> handler)
         {
-            var vm = view.DataContext as BaseInputVM;
+            var vm = UserInterface.DataContext as BaseInputVM;
             vm?.AddDataAvailableListener(handler);
         }
 
         public void RemoveDataAvailableListener(EventHandler<DataAvailableEventArgs> handler)
         {
-            var vm = view.DataContext as BaseInputVM;
+            var vm = UserInterface.DataContext as BaseInputVM;
             vm?.RemoveDataAvailableListener(handler);
         }
     }

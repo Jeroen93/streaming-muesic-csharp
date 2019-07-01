@@ -29,7 +29,8 @@ namespace Streaming_Muesic_WPF.Process
 
         public EventHandler<DataAvailableEventArgs> GetDataAvailableListener()
         {
-            var vm = view.DataContext as ProcessViewModelBase;
+            var vm = UserInterface.DataContext as ProcessViewModelBase;
+
             return vm.GetDataAvailableListener();
         }
     }
