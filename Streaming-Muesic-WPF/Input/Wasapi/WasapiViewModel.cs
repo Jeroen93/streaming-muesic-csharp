@@ -8,7 +8,6 @@ namespace Streaming_Muesic_WPF.Input.Wasapi
     internal class WasapiViewModel : BaseInputVM, IDisposable
     {
         private IWaveIn capture;
-        private SampleAggregator aggregator;
         private float maxLeft;
         private float maxRight;
         private float vuLeft;
@@ -65,12 +64,14 @@ namespace Streaming_Muesic_WPF.Input.Wasapi
             Aggregator = new SampleAggregator();
             StartCommand = new RelayCommand(Start);
             StopCommand = new RelayCommand(Stop);
+
+            capture = new WasapiLoopbackCapture();
+            capture.DataAvailable += Capture_DataAvailable;
+            capture.RecordingStopped += Capture_RecordingStopped;
         }
 
         private void Capture_RecordingStopped(object sender, StoppedEventArgs e)
         {
-            capture.Dispose();
-            capture = null;
             BtnStartEnabled = true;
         }
 
@@ -81,7 +82,7 @@ namespace Streaming_Muesic_WPF.Input.Wasapi
                 float leftSample = BitConverter.ToSingle(e.Buffer, i);
                 float rightSample = BitConverter.ToSingle(e.Buffer, i + 4);
 
-                aggregator.Add(leftSample, rightSample);
+                Aggregator.Add(leftSample, rightSample);
 
                 maxLeft = Math.Max(maxLeft, Math.Abs(leftSample));
                 maxRight = Math.Max(maxRight, Math.Abs(rightSample));
@@ -98,10 +99,7 @@ namespace Streaming_Muesic_WPF.Input.Wasapi
         }
 
         private void Start()
-        {
-            capture = new WasapiLoopbackCapture();
-            capture.DataAvailable += Capture_DataAvailable;
-            capture.RecordingStopped += Capture_RecordingStopped;
+        {            
             capture.StartRecording();
             BtnStartEnabled = false;
             BtnStopEnabled = true;
@@ -115,7 +113,14 @@ namespace Streaming_Muesic_WPF.Input.Wasapi
 
         public void Dispose()
         {
-            capture?.Dispose();
+            if (capture == null)
+            {
+                return;
+            }
+
+            capture.DataAvailable -= Capture_DataAvailable;
+            capture.RecordingStopped -= Capture_RecordingStopped;
+            capture.Dispose();
             capture = null;
         }
     }
