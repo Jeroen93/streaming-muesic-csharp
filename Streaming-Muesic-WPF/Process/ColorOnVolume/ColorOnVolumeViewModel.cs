@@ -9,7 +9,7 @@ namespace Streaming_Muesic_WPF.Process.ColorOnVolume
         private float maxRight;
         private int sampleCount;
         private float vuMix;
-
+        private double sliderValue = 0.5;
         private readonly int sampleRate;
 
         public ColorOnVolumeViewModel()
@@ -26,9 +26,15 @@ namespace Streaming_Muesic_WPF.Process.ColorOnVolume
             maxRight = Math.Max(maxRight, Math.Abs(right));
             sampleCount++;
 
-            if (sampleCount >= sampleRate / 25)
+            if (sampleCount >= sampleRate / 10)
             {
-                VuMix = (maxLeft + maxRight) / 2f;
+                float mix = (maxLeft + maxRight) / 2f;
+                VuMix = mix;
+
+                if (mix >= sliderValue)
+                {
+                    Console.WriteLine("Send to hue! " + mix);
+                }
 
                 sampleCount = 0;
                 maxLeft = maxRight = 0;
@@ -42,6 +48,16 @@ namespace Streaming_Muesic_WPF.Process.ColorOnVolume
             {
                 vuMix = value;
                 OnPropertyChanged(nameof(VuMix));
+            }
+        }
+
+        public double SliderValue
+        {
+            get => sliderValue;
+            set
+            {
+                sliderValue = value;
+                OnPropertyChanged(nameof(SliderValue));
             }
         }
     }

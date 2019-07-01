@@ -22,7 +22,7 @@
             <ProgressBar Height="24" Maximum="1" 
                          SmallChange="0.001" Value="{Binding VuMix}"/>
             <Slider VerticalAlignment="Center"
-                    Maximum="1.0" Value="0.5" />
+                    Maximum="1.0" Value="{Binding SliderValue}" />
         </Grid>
 
     </Grid>
